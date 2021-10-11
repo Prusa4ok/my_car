@@ -1,7 +1,7 @@
 <template>
   <div class="">
   
-    <div v-show="editTaskForm"  class="popup">
+    <div v-show="editTaskForm && !lastMonth"  class="popup">
       <form class="popup__content form__input mt-50" v-on:submit.prevent="saveEditTask">
         <input required ref="editDay" type="number" min="1" max="31" class="input input__num" placeholder="12">
         <input required ref="editTitle" class="input input__text" placeholder="Сделать...">
@@ -55,12 +55,14 @@ export default {
       this.$store.commit('removeTask', { idMonth: this.id, idTask: id });
     },
     editTask(id) {
-      this.editTaskForm = true;
-      this.$refs.editDay.value = this.allTaskData[this.id].tasks[id].day;
-      this.$refs.editTitle.value = this.allTaskData[this.id].tasks[id].title;
-      this.idTask = id;
+      if (!this.lastMonth) {
+        this.editTaskForm = true;
+        this.$refs.editDay.value = this.allTaskData[this.id].tasks[id].day;
+        this.$refs.editTitle.value = this.allTaskData[this.id].tasks[id].title;
+        this.idTask = id;
+      }
     },
-    saveEditTask() {
+    saveEditTask() {      
       this.$store.commit('editTask', { 
         idMonth: this.id, 
         idTask: this.idTask, 
